@@ -2,6 +2,7 @@
 
 db="-p 5432 -d postgres"
 path="/home/bbock/Repositories/Bikesharing/oslo_city_bike/data/"
+url="https://developer.oslobysykkel.no/data/"
 
 #create empty table
 psql $db <<EOF
@@ -26,8 +27,6 @@ CREATE TABLE vehicle_movements_oslo_city_bike
   )
 ;
 EOF
-
-url='https://developer.oslobysykkel.no/data/'
 
 # import data for oslo
 readarray -t linknames < linknames.csv

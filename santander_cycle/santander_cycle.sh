@@ -1,7 +1,8 @@
 #!/bin/bash
 
 db="-p 5432 -d postgres"
-user="bbock"
+folder="/home/bbock/Repositories/Bikesharing/santander_cycle/data/"
+url="http://cycling.data.tfl.gov.uk/usage-stats/"
 
 #create empty table
 psql $db <<EOF
@@ -34,8 +35,8 @@ readarray -t filenames < filenames.csv
 for filename in "${filenames[@]}"
   do
   filename_offline=$(echo "$filename"|awk '{gsub(/%20/," ")}1')
-  rm /tmp/${filename_offline}
-  wget http://cycling.data.tfl.gov.uk/usage-stats/${filename} -P /tmp/
+  rm ${folder}${filename_offline}
+  wget ${url}${filename} -P ${folder}
   #create empty table
   #data format:
   #Rental Id,Duration,Bike Id,End Date,EndStation Id,EndStation Name,Start Date,StartStation Id,StartStation Name
@@ -56,7 +57,7 @@ for filename in "${filenames[@]}"
     )
   ;
   COPY temp1
-    FROM '/tmp/${filename_offline}'
+    FROM '${folder}${filename_offline}'
     WITH DELIMITER AS E',' NULL AS '' csv HEADER
   ;
   INSERT INTO vehicle_movements_santander_cycle

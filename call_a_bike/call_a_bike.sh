@@ -1,7 +1,7 @@
 #!/bin/bash
 
 db="-p 5432 -d postgres"
-folder="/home/bbock/Repositories/Bikesharing/germany/data/"
+folder="/home/bbock/Repositories/Bikesharing/call_a_bike/data/"
 url="http://download-data.deutschebahn.com/static/datasets/callabike/"
 
 #get file from open data protal
