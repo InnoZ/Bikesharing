@@ -97,5 +97,5 @@ for filename in "${filenames[@]}"
     FROM temp1
   ;
 EOF
-  rm /tmp/${filename_offline}
+  #rm ${folder}${filename_offline}
 done
