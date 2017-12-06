@@ -1,0 +1,96 @@
+provider,city,country,station_data,trip_data,start time,end time,start station,end station,coordinates,start zone,end zone,duration,distance,costs,bike id,customer id,customer group,customer age,customer gender,booking medium,member_data,url
+Santander Cycles,London,UK,TRUE,TRUE,x,x,x,x,,,,x,,,x,,,,,,,http://cycling.data.tfl.gov.uk/
+CoGo Bikeshare,"Columbus, OH",US,TRUE,TRUE,,,,,,,,,,,,,,,,,,https://www.cogobikeshare.com/system-data
+Divvy,"Chicago, IL",US,TRUE,TRUE,x,x,x,x,,,,x,,,x,,x,,x,,TRUE,http://www.divvybikes.com/data
+Bike Chattanooga,"Chattanooga, TN",US,TRUE,TRUE,,,,,,,,,,,,,,,,,TRUE,https://data.chattlibrary.org/Transportation/Bike-Chattanooga-Trip-Data/8yba-nwv8
+Hubway,"Boston, MA",US,TRUE,TRUE,,,,,,,,,,,,,,,,,,http://hubwaydatachallenge.org/data-api/
+Capital Bikeshare,Washington DC,US,TRUE,TRUE,x,x,x,x,,,,x,,,x,x,,,,,TRUE,http://www.capitalbikeshare.com/system-data
+Nice Ride,"Minneapolis-St. Paul, MN",US,TRUE,TRUE,,,,,,,,,,,,,,,,,TRUE,https://www.niceridemn.org/data/
+Ford GoBike,"San Francisco Bay Area, CA",US,TRUE,TRUE,,,,,,,,,,,,,,,,,TRUE,http://www.bayareabikeshare.com/open-data
+bixi,Montreal,CA,TRUE,TRUE,x,x,x,x,,,,x,,,,,x,,,,,https://montreal.bixi.com/en/open-data
+Citi Bike,"New York City, NY",US,TRUE,TRUE,x,x,x,x,x,,,x,,,x,,x,x,x,,TRUE,http://www.citibikenyc.com/system-data
+oslo bike share,Oslo,NO,TRUE,TRUE,x,x,x,x,,,,,,,,,,,,,,https://developer.oslobysykkel.no/data/
+,Melbourne,AU,TRUE,,,,,,,,,,,,,,,,,,,http://www.melbournebikeshare.com.au/stationmap/data
+CityCycle,Brisbane,AU,TRUE,,,,,,,,,,,,,,,,,,,
+villo,Bruxelles-Capitale,BE,TRUE,,,,,,,,,,,,,,,,,,,
+Li bia velo,Namur,BE,TRUE,,,,,,,,,,,,,,,,,,,
+Tusbic,Santander,ES,TRUE,,,,,,,,,,,,,,,,,,,
+SEVICI,Seville,ES,TRUE,,,,,,,,,,,,,,,,,,,
+Valenbisi,Valence,ES,TRUE,,,,,,,,,,,,,,,,,,,
+Velam,Amiens,FR,TRUE,,,,,,,,,,,,,,,,,,,
+VéloCité,Besancon,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Velo2,Cergy-Pontoise,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Cristolib,Creteil,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Vélo'V,Lyon,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Le vélo,Marseille,FR,TRUE,,,,,,,,,,,,,,,,,,,
+VéloCité,Mulhouse,FR,TRUE,,,,,,,,,,,,,,,,,,,
+vélOstan'lib,Nancy,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Bicloo,Nantes,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Velib,Paris,FR,TRUE,,,,,,,,,,,,,,,,,,,
+cy'clic,Rouen,FR,TRUE,,,,,,,,,,,,,,,,,,,
+Vélô,Toulouse,FR,TRUE,,,,,,,,,,,,,,,,,,,
+dublinbikes,Dublin,IE,TRUE,,,,,,,,,,,,,,,,,,,
+cyclocity,Toyama,JP,TRUE,,,,,,,,,,,,,,,,,,,
+Cyclocity,Vilnius,LT,TRUE,,,,,,,,,,,,,,,,,,,
+Veloh,Luxembourg,LU,TRUE,,,,,,,,,,,,,,,,,,,
+Bysykkel,Lillestrom,NO,TRUE,,,,,,,,,,,,,,,,,,,
+Veli'k,Kazan,RU,TRUE,,,,,,,,,,,,,,,,,,,
+Göteborg,Goteborg,SE,TRUE,,,,,,,,,,,,,,,,,,,
+Lundahoj,Lund,SE,TRUE,,,,,,,,,,,,,,,,,,,
+Cyclocity,Stockholm,SE,TRUE,,,,,,,,,,,,,,,,,,,
+Bicikelj ,Ljubljana,SI,TRUE,,,,,,,,,,,,,,,,,,,
+diverse,diverse,IT,TRUE,,,,,,,,,,,,,,,,,,,http://www.datiopen.it/en/catalogo-opendata/bike-sharing
+Indego,Philadelphia ,US,TRUE,,,,,,,,,,,,,,,,,,,https://www.rideindego.com/about/data/
+diverse,Schweiz,CH,TRUE,,,,,,,,,,,,,,,,,,,https://opendata.swiss/en/dataset/bikesharing-und-veloverleihsysteme
+Biking,Barcalona,ES,TRUE,,,,,,,,,,,,,,,,,,,http://opendata-ajuntament.barcelona.cat/data/en/dataset/bicing
+belfast bikes,Belfast,UK,TRUE,,,,,,,,,,,,,,,,,,,http://www.belfastbikes.co.uk/en/belfast/statistics/
+Call-a-bike,hamburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,frankfurt am main,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,münchen,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,berlin,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,köln,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,kassel,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,stuttgart,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,darmstadt,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,marburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,rüsselsheim,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,wiesbaden,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,flugh. frankfurt,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,halle,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,kiel,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,baden-baden,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,mannheim,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,hannover,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,heidelberg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,düsseldorf,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,karlsruhe,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,bonn,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,freiburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,göttingen,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,bremen,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,mainz,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,troisdorf,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,würzburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,lübeck,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,aachen,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,braunschweig,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,weimar,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,saarbrücken,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,magdeburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,bamberg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,hanau,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,fulda,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,ingolstadt,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,erlangen,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,rostock,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,wolfsburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,bielefeld,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,aschaffenburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,kaiserslautern,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,oldenburg (oldb),DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,warnemünde,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,gütersloh,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,oberhausen,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,hennef,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,augsburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
+Call-a-bike,rendsburg,DE,TRUE,TRUE,x,x,x,x,,x,x,x,x,x,x,x,,,,x,,http://data.deutschebahn.com/dataset/data-call-a-bike
