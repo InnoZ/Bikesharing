@@ -1,15 +1,55 @@
 #!/bin/bash
 
+#!/bin/bash
+
 db="-p 5432 -d postgres"
 folder="/home/bbock/Repositories/Bikesharing/call_a_bike/data/"
 url="http://download-data.deutschebahn.com/static/datasets/callabike/"
+
+#import stations
+rm ${folder}OPENDATA_BOOKING_CALL_A_BIKE.zip
+wget "${url}"20170516/OPENDATA_RENTAL_ZONE_CALL_A_BIKE.zip -P $folder
+rm ${folder}OPENDATA_BOOKING_CALL_A_BIKE.csv
+unzip ${folder}OPENDATA_RENTAL_ZONE_CALL_A_BIKE.zip -d $folder
+#remove quotes from csv TODO: is there a more elegant way?
+sed -i 's/"//g' ${folder}OPENDATA_RENTAL_ZONE_CALL_A_BIKE.csv
+sed -i 's/,/./g' ${folder}OPENDATA_RENTAL_ZONE_CALL_A_BIKE.csv
+#create empty table
+psql $db <<EOF
+    -- import station data for callabike bikesharing
+    -- 'http://download-data.deutschebahn.com'
+    DROP TABLE IF EXISTS temp2;
+    CREATE TABLE temp2
+      (
+        RENTAL_ZONE_HAL_ID integer,
+        RENTAL_ZONE_HAL_SRC varchar,
+        NAME varchar,
+        CODE bigint,
+        TYPE varchar,
+        CITY varchar,
+        COUNTRY varchar,
+        LATITUDE numeric,
+        LONGITUDE numeric,
+        POI_AIRPORT_X varchar,
+        POI_LONG_DISTANCE_TRAINS_X varchar,
+        POI_SUBURBAN_TRAINS_X varchar,
+        POI_UNDERGROUND_X varchar,
+        ACTIVE_X varchar,
+        COMPANY  varchar,
+        COMPANY_GROUP varchar
+        )
+      ;
+    COPY temp2
+      FROM '${folder}OPENDATA_RENTAL_ZONE_CALL_A_BIKE.csv'
+      WITH DELIMITER AS E';' NULL AS '' csv HEADER
+    ;
+EOF
 
 #get file from open data protal
 rm ${folder}OPENDATA_BOOKING_CALL_A_BIKE.zip
 wget ${url}20170516/OPENDATA_BOOKING_CALL_A_BIKE.zip -P $folder
 unzip ${folder}OPENDATA_BOOKING_CALL_A_BIKE.zip -d $folder
-
-#remove quotes from csv
+#remove quotes from csv TODO: is there a more elegant way?
 sed -i 's/"//g' ${folder}OPENDATA_BOOKING_CALL_A_BIKE.csv
 
 #create empty table
