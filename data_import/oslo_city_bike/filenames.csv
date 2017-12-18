@@ -1,4 +1,4 @@
-/home/bbock/Repositories/Bikesharing/oslo_city_bike/data/:
+/data_import/oslo_city_bike/data/:
 file_list.txt
 test.csv
 trips-2016.10.1-2016.10.31.csv

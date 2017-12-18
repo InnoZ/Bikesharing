@@ -1,32 +1,8 @@
 #!/bin/bash
 
-db="-p 5432 -d postgres"
-folder="/home/bbock/Repositories/Bikesharing/citi_bike/data/"
+db="-p 5432 -d shared_mobility"
+folder="/home/bbock/Repositories/Bikesharing/data_import/citi_bike/data/"
 url="https://s3.amazonaws.com/tripdata/"
-
-#create empty table
-psql $db <<EOF
-DROP TABLE vehicle_movements_citi_bike;
-CREATE TABLE vehicle_movements_citi_bike
-  (
-    provider text NOT NULL,
-    city text NOT NULL,
-    key text NOT NULL,
-    started_at timestamp without time zone NOT NULL,
-    ended_at timestamp without time zone NOT NULL,
-    latitude_start numeric(11,8) NOT NULL,
-    longitude_start numeric(11,8) NOT NULL,
-    latitude_end numeric(11,8) NOT NULL,
-    longitude_end numeric(11,8) NOT NULL,
-    fuel_level_start integer,
-    fuel_level_end integer,
-    stationary boolean NOT NULL DEFAULT false,
-    price integer,
-    vehicle_type text NOT NULL DEFAULT 'car'::text,
-    from_movements boolean DEFAULT true
-  )
-;
-EOF
 
 # import data for nyc citi bike bikesharing
 readarray -t linknames < linknames.csv
@@ -73,19 +49,38 @@ for filename in "${filenames[@]}"
     FROM '${folder}${filename}'
     WITH DELIMITER AS E',' NULL AS 'NULL' csv HEADER
   ;
-  INSERT INTO vehicle_movements_citi_bike
+  INSERT INTO bikesharing.vehicle_movements
     (
+    provider text NOT NULL,
+    city text NOT NULL,
+    key text NOT NULL,
+    started_at timestamp without time zone NOT NULL,
+    ended_at timestamp without time zone NOT NULL,
+    start_station_id integer,
+    start_station_name varchar,
+    latitude_start numeric,
+    longitude_start numeric,
+    end_station_id integer,
+    end_station_name varchar,
+    latitude_end numeric,
+    longitude_end numeric,
+    stationary boolean NOT NULL DEFAULT false,
+    price varchar,
+    vehicle_type text NOT NULL DEFAULT 'car'::text,
+    from_movements boolean DEFAULT true
       provider,
       city,
       key,
       started_at,
       ended_at,
+      start_station_id,
+      start_station_name,
       latitude_start,
       longitude_start,
+      end_station_id,
+      end_station_name,
       latitude_end,
       longitude_end,
-      fuel_level_start,
-      fuel_level_end,
       stationary,
       price,
       vehicle_type,
@@ -97,12 +92,14 @@ for filename in "${filenames[@]}"
       bikeid AS key,
       starttime AS started_at,
       stoptime AS ended_at,
+      start_station_id,
+      start_station_name,
       start_station_latitude AS latitude_start,
       start_station_longitude AS longitude_start,
+      end_station_id,
+      end_station_name,
       end_station_latitude AS latitude_end,
       end_station_longitude AS longitude_end,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,
@@ -149,12 +146,14 @@ for filename_MDY in "${filenames_MDY[@]}"
       key,
       started_at,
       ended_at,
+      start_station_id,
+      start_station_name,
       latitude_start,
       longitude_start,
+      end_station_id,
+      end_station_name,
       latitude_end,
       longitude_end,
-      fuel_level_start,
-      fuel_level_end,
       stationary,
       price,
       vehicle_type,
@@ -166,12 +165,14 @@ for filename_MDY in "${filenames_MDY[@]}"
       bikeid AS key,
       starttime AS started_at,
       stoptime AS ended_at,
+      start_station_id,
+      start_station_name,
       start_station_latitude AS latitude_start,
       start_station_longitude AS longitude_start,
+      end_station_id,
+      end_station_name,
       end_station_latitude AS latitude_end,
       end_station_longitude AS longitude_end,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,

@@ -1,47 +1,23 @@
 #!/bin/bash
 
-db="-p 5432 -d postgres"
-folder="/home/bbock/Repositories/Bikesharing/capital_bikeshare/data/"
+db="-p 5432 -d shared_mobility"
+folder="/home/bbock/Repositories/Bikesharing/data_import/capital_bikeshare/data/"
 url="https://s3.amazonaws.com/capitalbikeshare-data/"
-
-#create empty table
-psql $db <<EOF
-DROP TABLE vehicle_movements_capital_bikeshare;
-CREATE TABLE vehicle_movements_capital_bikeshare
-  (
-    provider text NOT NULL,
-    city text NOT NULL,
-    key text,
-    started_at timestamp without time zone NOT NULL,
-    ended_at timestamp without time zone NOT NULL,
-    start_station_id integer,
-    start_station_name varchar,
-    end_station_id integer,
-    end_station_name varchar,
-    fuel_level_start integer,
-    fuel_level_end integer,
-    stationary boolean NOT NULL DEFAULT false,
-    price integer,
-    vehicle_type text NOT NULL DEFAULT 'car'::text,
-    from_movements boolean DEFAULT true
-  )
-;
-EOF
 
 # import data for nyc citi bike bikesharing
 readarray -t linknames < linknames.csv
 
-#for linkname in "${linknames[@]}"
-#  do
-#  echo "downloading ${folder}${linkname}"
-#  rm ${folder}${linkname}
-#  wget ${url}${linkname} -P ${folder}
-#  unzip ${folder}${linkname} -d ${folder}
-#  rm ${folder}${linkname}
-#done
+for linkname in "${linknames[@]}"
+ do
+ echo "downloading ${folder}${linkname}"
+ rm ${folder}${linkname}
+ wget ${url}${linkname} -P ${folder}
+ unzip ${folder}${linkname} -d ${folder}
+ rm ${folder}${linkname}
+done
 
-#rm filenames.csv
-#ls -R ${folder} > filenames.csv
+rm filenames.csv
+ls -R ${folder} > filenames.csv
 #TODO: check datestyle for each file
 readarray -t filenames < filenames.csv
 
@@ -66,7 +42,7 @@ for filename in "${filenames[@]}"
     FROM '${folder}${filename}'
     WITH DELIMITER AS E',' NULL AS '' csv HEADER
   ;
-  INSERT INTO vehicle_movements_capital_bikeshare
+  INSERT INTO bikesharing.vehicle_movements
     (
       provider,
       city,
@@ -75,10 +51,12 @@ for filename in "${filenames[@]}"
       ended_at,
       start_station_id,
       start_station_name,
+      latitude_start,
+      longitude_start,
       end_station_id,
       end_station_name,
-      fuel_level_start,
-      fuel_level_end,
+      latitude_end,
+      longitude_end,
       stationary,
       price,
       vehicle_type,
@@ -91,11 +69,13 @@ for filename in "${filenames[@]}"
       Start_date AS started_at,
       End_date AS ended_at,
       NULL AS start_station_id,
-      Start_station AS start_station_name,
-      NULL AS end_station_id,
-      End_station AS end_station_name,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
+      start_station AS start_station_name,
+      NULL AS latitude_start,
+      NULL AS longitude_start,
+      end_station AS end_station_id,
+      NULL AS end
+      NULL AS latitude_end,
+      NULL AS longitude_end,
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,
@@ -127,7 +107,7 @@ for filename_2 in "${filenames_2[@]}"
     FROM '${folder}${filename_2}'
     WITH DELIMITER AS E',' NULL AS '' csv HEADER
   ;
-  INSERT INTO vehicle_movements_capital_bikeshare
+  INSERT INTO bikesharing.vehicle_movements
     (
       provider,
       city,
@@ -136,10 +116,12 @@ for filename_2 in "${filenames_2[@]}"
       ended_at,
       start_station_id,
       start_station_name,
+      latitude_start,
+      longitude_start,
       end_station_id,
       end_station_name,
-      fuel_level_start,
-      fuel_level_end,
+      latitude_end,
+      longitude_end,
       stationary,
       price,
       vehicle_type,
@@ -153,10 +135,12 @@ for filename_2 in "${filenames_2[@]}"
       End_date AS ended_at,
       NULL AS start_station_id,
       Start_station AS start_station_name,
+      NULL AS latitude_start,
+      NULL AS longitude_start,
       NULL AS end_station_id,
       End_station AS end_station_name,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
+      NULL AS latitude_end,
+      NULL AS longitude_end,
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,
@@ -201,8 +185,6 @@ for filename_2 in "${filenames_3[@]}"
       start_station_name,
       end_station_id,
       end_station_name,
-      fuel_level_start,
-      fuel_level_end,
       stationary,
       price,
       vehicle_type,
@@ -216,10 +198,12 @@ for filename_2 in "${filenames_3[@]}"
       End_date AS ended_at,
       Start_station_id AS start_station_id,
       Start_station AS start_station_name,
+      NULL AS latitude_start,
+      NULL AS longitude_start,
       End_station_id AS end_station_id,
       End_station AS end_station_name,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
+      NULL AS latitude_end,
+      NULL AS longitude_end,  
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,

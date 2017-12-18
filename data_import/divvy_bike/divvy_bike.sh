@@ -1,7 +1,7 @@
 #!/bin/bash
 
-db="-p 5432 -d postgres"
-folder="/home/bbock/Repositories/Bikesharing/divvy_bike/data/"
+db="-p 5432 -d shared_mobility"
+folder="/home/bbock/Repositories/Bikesharing/data_import/divvy_bike/data/"
 url="https://s3.amazonaws.com/divvy-data/tripdata/"
 
 
@@ -86,8 +86,8 @@ psql $db <<EOF
       endstation_name,
       startstation_id,
       startstation_name,
-      fuel_level_start,
-      fuel_level_end,
+
+
       stationary,
       price,
       vehicle_type,
@@ -103,8 +103,8 @@ psql $db <<EOF
       END_RENTAL_ZONE,
       START_RENTAL_ZONE_HAL_ID::integer,
       START_RENTAL_ZONE,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
+
+      
       CASE WHEN RENTAL_ZONE_HAL_SRC='standort' THEN TRUE ELSE FALSE END AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,

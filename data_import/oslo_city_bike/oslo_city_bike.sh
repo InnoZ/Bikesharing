@@ -1,32 +1,8 @@
 #!/bin/bash
 
-db="-p 5432 -d postgres"
-path="/home/bbock/Repositories/Bikesharing/oslo_city_bike/data/"
+db="-p 5432 -d shared_mobility"
+path="/data_import/oslo_city_bike/data/"
 url="https://developer.oslobysykkel.no/data/"
-
-#create empty table
-psql $db <<EOF
-DROP TABLE vehicle_movements_oslo_city_bike;
-CREATE TABLE vehicle_movements_oslo_city_bike
-  (
-    provider text NOT NULL,
-    city text NOT NULL,
-    key text,
-    started_at timestamp without time zone NOT NULL,
-    ended_at timestamp without time zone NOT NULL,
-    endstation_id integer,
-    endstation_name varchar,
-    startstation_id integer,
-    startstation_name varchar,
-    fuel_level_start integer,
-    fuel_level_end integer,
-    stationary boolean NOT NULL DEFAULT false,
-    price integer,
-    vehicle_type text NOT NULL DEFAULT 'car'::text,
-    from_movements boolean DEFAULT true
-  )
-;
-EOF
 
 # import data for oslo
 readarray -t linknames < linknames.csv
@@ -74,8 +50,6 @@ for filename in "${filenames[@]}"
       endstation_name,
       startstation_id,
       startstation_name,
-      fuel_level_start,
-      fuel_level_end,
       stationary,
       price,
       vehicle_type,
@@ -87,12 +61,14 @@ for filename in "${filenames[@]}"
       NULL AS key,
       start_time AS started_at,
       end_time AS ended_at,
-      end_station,
-      NULL AS endstation_name,
       start_station,
       NULL AS startstation_name,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
+      NULL AS latitude_start,
+      NULL AS longitude_start,
+      end_station,
+      NULL AS endstation_name,
+      NULL AS latitude_end,
+      NULL AS longitude_end,
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,

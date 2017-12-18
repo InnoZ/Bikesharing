@@ -1,32 +1,8 @@
 #!/bin/bash
 
-db="-p 5432 -d postgres"
-folder="/home/bbock/Repositories/Bikesharing/santander_cycle/data/"
+db="-p 5432 -d shared_mobility"
+folder="/home/bbock/Repositories/Bikesharing/data_import/santander_cycle/data/"
 url="http://cycling.data.tfl.gov.uk/usage-stats/"
-
-#create empty table
-psql $db <<EOF
-DROP TABLE vehicle_movements_santander_cycle;
-CREATE TABLE vehicle_movements_santander_cycle
-  (
-    provider text NOT NULL,
-    city text NOT NULL,
-    key text NOT NULL,
-    started_at timestamp without time zone NOT NULL,
-    ended_at timestamp without time zone NOT NULL,
-    endstation_id integer,
-    endstation_name varchar,
-    startstation_id integer,
-    startstation_name varchar,
-    fuel_level_start integer,
-    fuel_level_end integer,
-    stationary boolean NOT NULL DEFAULT false,
-    price integer,
-    vehicle_type text NOT NULL DEFAULT 'car'::text,
-    from_movements boolean DEFAULT true
-  )
-;
-EOF
 
 # import data for london santander bikesharing
 # 'http://cycling.data.tfl.gov.uk/usage-stats/'
@@ -67,12 +43,14 @@ for filename in "${filenames[@]}"
       key,
       started_at,
       ended_at,
-      endstation_id,
-      endstation_name,
-      startstation_id,
-      startstation_name,
-      fuel_level_start,
-      fuel_level_end,
+      start_station_id,
+      start_station_name,
+      latitude_start,
+      longitude_start,
+      end_station_id,
+      end_station_name,
+      latitude_end,
+      longitude_end,
       stationary,
       price,
       vehicle_type,
@@ -84,12 +62,14 @@ for filename in "${filenames[@]}"
       bike_id AS key,
       start_date AS started_at,
       end_date AS ended_at,
-      endstation_id,
-      endstation_name,
       startstation_id,
       startstation_name,
-      NULL AS fuel_level_start,
-      NULL AS fuel_level_end,
+      NULL AS latitude_start,
+      NULL AS longitude_start,
+      endstation_id,
+      endstation_name,
+      NULL AS latitude_end,
+      NULL AS longitude_end,
       TRUE AS stationary,
       NULL AS price,
       'bike' AS vehicle_type,
