@@ -146,7 +146,7 @@ psql $db <<EOF
   ;
 EOF
 
-#get trip data from open data protal
+#get trip data from open data portal
 rm ${folder}OPENDATA_BOOKING_CALL_A_BIKE.zip
 wget ${url}20170516/OPENDATA_BOOKING_CALL_A_BIKE.zip -P $folder
 unzip ${folder}OPENDATA_BOOKING_CALL_A_BIKE.zip -d $folder
@@ -187,9 +187,11 @@ psql $db <<EOF
     trips.DATE_FROM AS started_at,
     trips.DATE_UNTIL AS ended_at,
     trips.START_RENTAL_ZONE_HAL_ID::integer AS start_station_id,
+    trips.START_RENTAL_ZONE AS start_station_name,
     stations.LATITUDE AS latitude_start,
     stations.LONGITUDE AS longitude_start,
-    trips.END_RENTAL_ZONE_HAL_ID::integer,
+    trips.END_RENTAL_ZONE_HAL_ID::integer AS end_station_id,
+    trips.END_RENTAL_ZONE AS end_station_name,
     trips.COMPUTE_EXTRA_BOOKING_FEE AS price
   FROM temp1 trips
   LEFT OUTER JOIN
@@ -223,7 +225,7 @@ psql $db <<EOF
     ) stations
     ON
     (
-      trips.END_RENTAL_ZONE_HAL_ID=stations.station_id
+      trips.end_station_id=stations.station_id
     )
   ;
   INSERT INTO bikesharing.vehicle_movements
@@ -234,13 +236,13 @@ psql $db <<EOF
       started_at,
       ended_at,
       start_station_id,
+      start_station_name,
       latitude_start,
       longitude_start,
       end_station_id,
+      end_station_name,
       latitude_end,
       longitude_end,
-
-
       stationary,
       price,
       vehicle_type,
@@ -258,8 +260,6 @@ psql $db <<EOF
       end_station_id,
       latitude_end,
       longitude_end,
-
-      
       stationary,
       price,
       'bike' AS vehicle_type,

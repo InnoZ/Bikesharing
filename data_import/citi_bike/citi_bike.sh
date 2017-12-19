@@ -5,7 +5,7 @@ folder="/home/bbock/Repositories/Bikesharing/data_import/citi_bike/data/"
 url="https://s3.amazonaws.com/tripdata/"
 
 # import data for nyc citi bike bikesharing
-readarray -t linknames < linknames.csv
+readarray -t linknames < ${folder}linknames.csv
 
 for linkname in "${linknames[@]}"
   do
@@ -16,10 +16,10 @@ for linkname in "${linknames[@]}"
   rm ${folder}${linkname}
 done
 
-#rm filenames.csv
-#ls -R ${folder} > filenames.csv
+rm filenames.csv
+ls -R ${folder} > ${folder}filenames.csv
 #TODO: check datestyle for each file
-readarray -t filenames < filenames.csv
+readarray -t filenames < ${folder}filenames.csv
 
 for filename in "${filenames[@]}"
   do
@@ -51,23 +51,6 @@ for filename in "${filenames[@]}"
   ;
   INSERT INTO bikesharing.vehicle_movements
     (
-    provider text NOT NULL,
-    city text NOT NULL,
-    key text NOT NULL,
-    started_at timestamp without time zone NOT NULL,
-    ended_at timestamp without time zone NOT NULL,
-    start_station_id integer,
-    start_station_name varchar,
-    latitude_start numeric,
-    longitude_start numeric,
-    end_station_id integer,
-    end_station_name varchar,
-    latitude_end numeric,
-    longitude_end numeric,
-    stationary boolean NOT NULL DEFAULT false,
-    price varchar,
-    vehicle_type text NOT NULL DEFAULT 'car'::text,
-    from_movements boolean DEFAULT true
       provider,
       city,
       key,
@@ -109,7 +92,7 @@ for filename in "${filenames[@]}"
 EOF
 done
 
-readarray -t filenames_MDY < filenames_MDY.csv
+readarray -t filenames_MDY < ${folder}filenames_MDY.csv
 for filename_MDY in "${filenames_MDY[@]}"
   do
   echo "### copying ${filename_MDY}"
@@ -139,7 +122,7 @@ for filename_MDY in "${filenames_MDY[@]}"
     FROM '${folder}${filename_MDY}'
     WITH DELIMITER AS E',' NULL AS 'NULL' csv HEADER
   ;
-  INSERT INTO vehicle_movements_citi_bike
+  INSERT INTO bikesharing.vehicle_movements
     (
       provider,
       city,

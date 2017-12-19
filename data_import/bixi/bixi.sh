@@ -3,86 +3,77 @@
 db="-p 5432 -d shared_mobility"
 folder="/home/bbock/Repositories/Bikesharing/data_import/bixi/data/"
 url="https://montreal.bixi.com/c/bixi/file_db/data_all.file/"
-url_stations="https://secure.bixi.com/data/"
 
-# # datasource: https://montreal.bixi.com/en/open-data
-# # import stations
-# rm ${folder}stations.json
-# wget ${url_stations}stations.json -P ${folder}
-# # TODO: ad capacity to station table
-# psql $db <<EOF
-# DROP TABLE IF EXISTS temp1;
-# CREATE TABLE temp1
-#   (
-#     id integer,
-#     s varchar,
-#     n integer,
-#     st integer,
-#     b boolean,
-#     su boolean,
-#     m boolean,
-#     lu bigint,
-#     lc bigint,
-#     bk boolean,
-#     bl boolean,
-#     la numeric,
-#     lo numeric,
-#     da integer,
-#     dx integer,
-#     ba integer,
-#     bx integer
-#   )
-# ;
-# COPY temp1
-#   FROM '${folder}stations.json'
-#   DELIMITER AS E','
-# ;
-# DELETE FROM temp1
-# WHERE n IN
-#   (
-#     SELECT station_id
-#     FROM bikesharing.stations
-#     WHERE provider='bixi'
-#   )
-# ;
-# INSERT INTO bikesharing.stations
-#   (
-#     provider,
-#     city,
-#     station_id,
-#     station_name,
-#     latitude,
-#     longitude,
-#     vehicle_type,
-#     from_movements
-#   )
-#   SELECT
-#     'bixi' AS provider,
-#     'montreal' AS city,
-#     s AS station_id,
-#     n AS station_name,
-#     la AS latitude,
-#     lo AS longitude,
-#     'bike' AS vehicle_type,
-#     TRUE AS from_movements
-#   FROM temp1
-# ;
-# EOF
-
-#get trip data from open data protal
-readarray -t linknames < ${folder}linknames.csv
-for linkname in "${linknames[@]}"
-  do
-  rm ${folder}${linkname}
-  wget ${url}${linkname} -P ${folder}
-  unzip ${folder}${linkname} -d ${folder}
-  #TODO: mv files from subfolders
-  rm ${folder}${linkname}
-done
-
-ls -R ${folder} > ${folder}filenames.csv
+# # get trip data from open data protal
+# readarray -t linknames < ${folder}linknames.csv
+#
+# for linkname in "${linknames[@]}"
+#   do
+#   echo "downloading ${folder}${linkname}"
+#   rm ${folder}${linkname}
+#   wget ${url}${linkname} -P ${folder}
+#   unzip ${folder}${linkname} -d ${folder}
+#   #TODO: mv files from subfolders
+#   rm ${folder}${linkname}
+# done
+# # flatten files in folders
+# find ${folder} -mindepth 2 -type f -exec mv -i '{}' ${folder} ';'
+# # create list of files
+# ls -R ${folder} > ${folder}filenames.csv
+readarray -t filenames_stations < ${folder}filenames_stations.csv
 readarray -t filenames < ${folder}filenames.csv
 
+# import station details
+for filename_stations in "${filenames_stations[@]}"
+  do
+  psql $db <<EOF
+  DROP TABLE IF EXISTS temp1;
+  CREATE TABLE temp1
+    (
+      code integer,
+      name varchar,
+      latitude numeric,
+      longitude numeric
+    )
+  ;
+  COPY temp1
+    FROM '${folder}${filename_stations}'
+    WITH DELIMITER AS E',' NULL AS '' csv HEADER
+  ;
+  DELETE FROM temp1
+  WHERE code IN
+    (
+      SELECT station_id
+      FROM bikesharing.stations
+      WHERE provider='bixi'
+    )
+  ;
+  INSERT INTO bikesharing.stations
+    (
+      provider,
+      city,
+      station_id,
+      station_name,
+      latitude,
+      longitude,
+      vehicle_type,
+      from_movements
+    )
+    SELECT
+         'bixi' AS provider,
+         'montreal' AS city,
+         code AS station_id,
+         name AS station_name,
+         latitude AS latitude,
+         longitude AS longitude,
+         'bike' AS vehicle_type,
+         TRUE AS from_movements
+    FROM temp1
+  ;
+EOF
+done
+
+# import trips
 for filename in "${filenames[@]}"
   do
   psql $db <<EOF
@@ -107,18 +98,18 @@ for filename in "${filenames[@]}"
     trips.start_date AS started_at,
     trips.end_date AS ended_at,
     trips.start_station_code AS start_station_id,
-    --stations.la AS latitude_start,
-    --stations.lo AS longitude_start,
+    stations.latitude AS latitude_start,
+    stations.longitude AS longitude_start,
     trips.end_station_code AS end_station_id
   FROM temp1 trips
-  --LEFT OUTER JOIN
-  --  (
-  --    SELECT * FROM bikesharing.stations WHERE provider='bixi'
-  --  ) stations
-  --  ON
-  --  (
-  --    trips.start_station_code=stations.station_id
-  --  )
+  LEFT OUTER JOIN
+    (
+      SELECT * FROM bikesharing.stations WHERE provider='bixi'
+    ) stations
+    ON
+    (
+      trips.start_station_code=stations.station_id
+    )
   ;
   DROP TABLE IF EXISTS temp3;
   CREATE TABLE temp3 AS
@@ -126,20 +117,20 @@ for filename in "${filenames[@]}"
     trips.started_at,
     trips.ended_at,
     trips.start_station_id,
-    --trips.latitude_start,
-    --trips.longitude_start,
+    trips.latitude_start,
+    trips.longitude_start,
     trips.end_station_id,
-    --stations.la latitude_end,
-    --stations.lo AS longitude_end
+    stations.latitude AS latitude_end,
+    stations.longitude AS longitude_end
   FROM temp2 trips
-  --LEFT OUTER JOIN
-  --  (
-  --    SELECT * FROM bikesharing.stations WHERE provider='bixi'
-  --  ) stations
-  --  ON
-  --  (
-  --    trips.end_station_id=stations.station_id
-  --  )
+  LEFT OUTER JOIN
+    (
+      SELECT * FROM bikesharing.stations WHERE provider='bixi'
+    ) stations
+    ON
+    (
+      trips.end_station_id=stations.station_id
+    )
   ;
   INSERT INTO bikesharing.vehicle_movements
     (

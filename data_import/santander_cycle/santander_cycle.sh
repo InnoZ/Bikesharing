@@ -6,7 +6,7 @@ url="http://cycling.data.tfl.gov.uk/usage-stats/"
 
 # import data for london santander bikesharing
 # 'http://cycling.data.tfl.gov.uk/usage-stats/'
-readarray -t filenames < filenames.csv
+readarray -t filenames < ${folder}filenames.csv
 
 for filename in "${filenames[@]}"
   do
@@ -36,7 +36,7 @@ for filename in "${filenames[@]}"
     FROM '${folder}${filename_offline}'
     WITH DELIMITER AS E',' NULL AS '' csv HEADER
   ;
-  INSERT INTO vehicle_movements_santander_cycle
+  INSERT INTO bikesharing.vehicle_movements
     (
       provider,
       city,

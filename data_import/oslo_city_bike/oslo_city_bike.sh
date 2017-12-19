@@ -1,26 +1,26 @@
 #!/bin/bash
 
 db="-p 5432 -d shared_mobility"
-path="/data_import/oslo_city_bike/data/"
+folder="/home/bbock/Repositories/Bikesharing/data_import/oslo_city_bike/data/"
 url="https://developer.oslobysykkel.no/data/"
 
-# import data for oslo
-readarray -t linknames < linknames.csv
+# #get trip data from open data portal
+# readarray -t linknames < ${folder}linknames.csv
+# for linkname in ${linknames[@]}
+#   do
+#   rm ${folder}${linkname}.csv
+#   wget ${url}${linkname}.csv -P ${folder}
+#   unzip ${folder}${linkname}.csv -d ${folder}
+#   rm ${folder}${linkname}.csv
+# done
+#
+# ls -R ${folder} > ${folder}filenames.csv
+readarray -t filenames < ${folder}filenames.csv
 
-for linkname in "${linknames[@]}"
+for filename in ${filenames[@]}
   do
-  rm "${path}""${linkname}".csv
-  wget "${url}""${linkname}".csv -P "${path}"
-  unzip "${path}""${linkname}".csv -d "${path}"
-  rm "${path}""${linkname}".csv
-done
-
-ls -R "${path}" > filenames.csv
-readarray -t filenames < filenames.csv
-
-for filename in "${filenames[@]}"
-  do
-  chmod a+rwx "${path}""${filename}"
+  # change reading rights to files
+  chmod a+rwx ${folder}${filename}
   #create empty table
   #data format:
   #Rental Id,Duration,Bike Id,End Date,EndStation Id,EndStation Name,Start Date,StartStation Id,StartStation Name
@@ -36,20 +36,24 @@ for filename in "${filenames[@]}"
     )
   ;
   COPY temp1
-    FROM '${path}${filename}'
+    FROM '${folder}${filename}'
     WITH DELIMITER AS E',' NULL AS '' csv HEADER
   ;
-  INSERT INTO vehicle_movements_oslo_city_bike
+  INSERT INTO bikesharing.vehicle_movements
     (
       provider,
       city,
       key,
       started_at,
       ended_at,
-      endstation_id,
-      endstation_name,
-      startstation_id,
-      startstation_name,
+      start_station_id,
+      start_station_name,
+      latitude_start,
+      longitude_start,
+      end_station_id,
+      end_station_name,
+      latitude_end,
+      longitude_end,
       stationary,
       price,
       vehicle_type,
@@ -61,12 +65,12 @@ for filename in "${filenames[@]}"
       NULL AS key,
       start_time AS started_at,
       end_time AS ended_at,
-      start_station,
-      NULL AS startstation_name,
+      start_station AS start_station_id,
+      NULL AS start_station_name,
       NULL AS latitude_start,
       NULL AS longitude_start,
-      end_station,
-      NULL AS endstation_name,
+      end_station AS end_station_id,
+      NULL AS end_station_name,
       NULL AS latitude_end,
       NULL AS longitude_end,
       TRUE AS stationary,
@@ -76,5 +80,5 @@ for filename in "${filenames[@]}"
     FROM temp1
   ;
 EOF
-  #rm "${path}""${filename}"
+  #rm "${folder}""${filename}"
 done

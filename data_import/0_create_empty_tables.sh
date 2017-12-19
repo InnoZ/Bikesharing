@@ -5,7 +5,7 @@ folder="/home/bbock/Repositories/Bikesharing/data_import/innoz/data/"
 
 psql $db <<EOF
 --tables: create relevant tables
---DROP TABLE IF EXISTS bikesharing.stations;
+DROP TABLE IF EXISTS bikesharing.stations;
 CREATE TABLE bikesharing.stations
   (
     provider varchar,
@@ -18,14 +18,14 @@ CREATE TABLE bikesharing.stations
     from_movements boolean
   )
 ;
---DROP TABLE bikesharing.vehicle_movements;
+DROP TABLE bikesharing.vehicle_movements;
 CREATE TABLE bikesharing.vehicle_movements
   (
-    provider text NOT NULL,
-    city text NOT NULL,
-    key text NOT NULL,
-    started_at timestamp without time zone NOT NULL,
-    ended_at timestamp without time zone NOT NULL,
+    provider text,
+    city text,
+    key text,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone,
     start_station_id integer,
     start_station_name varchar,
     latitude_start numeric,
@@ -34,9 +34,9 @@ CREATE TABLE bikesharing.vehicle_movements
     end_station_name varchar,
     latitude_end numeric,
     longitude_end numeric,
-    stationary boolean NOT NULL DEFAULT false,
+    stationary boolean  DEFAULT false,
     price varchar,
-    vehicle_type text NOT NULL DEFAULT 'car'::text,
+    vehicle_type text  DEFAULT 'car'::text,
     from_movements boolean DEFAULT true
   )
 ;
