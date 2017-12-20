@@ -1,9 +1,3 @@
-#!/bin/bash
-
-db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/innoz/data/"
-
-psql $db <<EOF
 --tables: create relevant tables
 DROP TABLE IF EXISTS bikesharing.stations;
 CREATE TABLE bikesharing.stations
@@ -40,4 +34,3 @@ CREATE TABLE bikesharing.vehicle_movements
     from_movements boolean DEFAULT true
   )
 ;
-EOF

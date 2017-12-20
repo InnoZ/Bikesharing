@@ -1,8 +1,3 @@
-#!/bin/bash
-
-db="-p 5432 -d shared_mobility"
-
-psql $db <<EOF
 --TODO: integrate tables, merge sightings to movements
 
 -- ---------------------------- --
@@ -164,4 +159,3 @@ CREATE INDEX bikesharing_vehicle_sightings_vehicle_type_idx
   ON bikesharing.vehicle_sightings
   USING btree
   (vehicle_type COLLATE pg_catalog."default");
-EOF
