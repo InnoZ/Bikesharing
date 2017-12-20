@@ -8,7 +8,8 @@ SELECT
 	lead(key) OVER (ORDER BY key, started_at) AS lead_key,
 	st_setsrid(ST_Point(longitude_start, latitude_start), 4326) AS geom_start,
 	st_setsrid(ST_Point(longitude_end, latitude_end), 4326) AS geom_end
-FROM bikesharing.vehicle_movements;
+FROM bikesharing.vehicle_movements
+WHERE city='berlin' AND started_at BETWEEN '2016-09-01 00:00' AND '2016-10-01 00:00';
 
 -- label last movement of a specific vehicle
 ALTER TABLE bikesharing.temp1 ADD COLUMN last_movement boolean;
@@ -25,7 +26,7 @@ FROM bikesharing.temp1;
 
 -- delete rows with unlogical values
 DELETE FROM bikesharing.vehicle_movements_extended
-  WHERE crowflydistance < 0 OR idle_time < '00:00:00' OR duration < '00:00:00';
+  WHERE crowflydistance < 0 OR lead_idle_time < '00:00:00' OR duration < '00:00:00';
 
 -- -- update times to match booking data
 -- -- TODO: check with timezones etc. to identify source of problem
@@ -36,56 +37,30 @@ DELETE FROM bikesharing.vehicle_movements_extended
 -- UPDATE bikesharing.vehicle_movements_extended
 --   SET lead_started_at = lead_started_at + interval '04:00:00';
 
--- index: bike_movements_extended_provider_idx
-
-DROP INDEX IF EXISTS bike_movements_extended_provider_idx;
-
-CREATE INDEX bike_movements_extended_provider_idx
-  ON bikesharing.bike_movements_extended
+-- index: vehicle_movements_extended_provider_idx
+DROP INDEX IF EXISTS vehicle_movements_extended_provider_idx;
+CREATE INDEX vehicle_movements_extended_provider_idx
+  ON bikesharing.vehicle_movements_extended
   USING btree
   (provider COLLATE pg_catalog."default");
 
--- index: bike_movements_extended_stationary_idx
-
-DROP INDEX IF EXISTS bike_movements_extended_stationary_idx;
-
-CREATE INDEX bike_movements_extended_stationary_idx
-  ON bikesharing.bike_movements_extended
+-- index: vehicle_movements_extended_stationary_idx
+DROP INDEX IF EXISTS vehicle_movements_extended_stationary_idx;
+CREATE INDEX vehicle_movements_extended_stationary_idx
+  ON bikesharing.vehicle_movements_extended
   USING btree
   (stationary);
 
--- index: bike_movements_extended_bike_type_idx
-
-DROP INDEX IF EXISTS bike_movements_extended_bike_type_idx;
-
-CREATE INDEX bike_movements_extended_bike_type_idx
-  ON bikesharing.bike_movements_extended
-  USING btree
-  (bike_type COLLATE pg_catalog."default");
-
--- index: bike_movements_extended_geom_gist
-
-DROP INDEX IF EXISTS bike_movements_extended_geom_gist;
-
-CREATE INDEX bike_movements_extended_geom_gist
-  ON bikesharing.bike_movements_extended
+-- index: vehicle_movements_extended_lead_geom_gist
+DROP INDEX IF EXISTS vehicle_movements_extended_geom_start_gist;
+CREATE INDEX vehicle_movements_extended_geom_start_gist
+  ON bikesharing.vehicle_movements_extended
   USING gist
-  (geom);
+  (geom_start);
 
--- index: bike_movements_extended_lead_geom_gist
-
-DROP INDEX IF EXISTS bike_movements_extended_lead_geom_gist;
-
-CREATE INDEX bike_movements_extended_lead_geom_gist
-  ON bikesharing.bike_movements_extended
+-- index: vehicle_movements_extended_line_geom_gist
+DROP INDEX IF EXISTS vehicle_movements_extended_geom_end_gist;
+CREATE INDEX vehicle_movements_extended_geom_end_gist
+  ON bikesharing.vehicle_movements_extended
   USING gist
-  (lead_geom);
-
--- index: bike_movements_extended_line_geom_gist
-
-DROP INDEX IF EXISTS bike_movements_extended_line_geom_gist;
-
-CREATE INDEX bike_movements_extended_line_geom_gist
-  ON bikesharing.bike_movements_extended
-  USING gist
-  (line_geom);
+  (geom_end);
