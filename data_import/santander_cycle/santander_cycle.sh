@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/santander_cycle/data/"
+folder="/home/${user}Bikesharing/data_import/santander_cycle/data/"
 url="http://cycling.data.tfl.gov.uk/usage-stats/"
 
 # import data for london santander bikesharing

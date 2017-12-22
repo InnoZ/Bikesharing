@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/call_a_bike/data/"
+folder="/home/${user}Bikesharing/data_import/call_a_bike/data/"
 url="http://download-data.deutschebahn.com/static/datasets/callabike/"
 
 # datasource: http://data.deutschebahn.com/dataset/data-call-a-bike

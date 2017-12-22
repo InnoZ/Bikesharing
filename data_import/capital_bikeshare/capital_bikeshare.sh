@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/capital_bikeshare/data/"
+folder="/home/${user}Bikesharing/data_import/capital_bikeshare/data/"
 url="https://s3.amazonaws.com/capitalbikeshare-data/"
 
 # import data for nyc citi bike bikesharing

@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/innoz/data/"
+folder="/home/${user}Bikesharing/data_import/innoz/data/"
 url="https://cloud.innoz.de/index.php/s/eQdoo4SIMHbV2Jg/download"
 
 # #OPTIONAL: select data from datahub

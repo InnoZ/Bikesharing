@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/bixi/data/"
+folder="/home/${user}Bikesharing/data_import/bixi/data/"
 url="https://montreal.bixi.com/c/bixi/file_db/data_all.file/"
 
 # # get trip data from open data protal

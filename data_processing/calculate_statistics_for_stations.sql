@@ -1,15 +1,16 @@
---this script will combine observation periods and movements to gain average returns per station
---TODO: unify keys from 2015 and 2016
+-- this script will combine observation periods and movements to gain average returns per station
+-- TODO: unify keys from 2015 and 2016
+-- TODO: calculate metastats from movements as well 
 
 DROP TABLE IF EXISTS temp;
 
-CREATE TABLE temp AS 
+CREATE TABLE temp AS
 SELECT
 *
 FROM
 (
   WITH station_periods AS (
-  SELECT 
+  SELECT
   *,
   CASE WHEN date_part('hour', seen_at) BETWEEN 0 AND 6 THEN departures ELSE 0 END AS "dep_0_6",
   CASE WHEN date_part('hour', seen_at) BETWEEN 6 AND 12 THEN departures ELSE 0 END AS "dep_6_12",
@@ -19,7 +20,7 @@ FROM
   CASE WHEN date_part('hour', seen_at) BETWEEN 6 AND 12 THEN returns ELSE 0 END AS "ret_6_12",
   CASE WHEN date_part('hour', seen_at) BETWEEN 12 AND 18 THEN returns ELSE 0 END AS "ret_12_18",
   CASE WHEN date_part('hour', seen_at) BETWEEN 18 AND 24 THEN returns ELSE 0 END AS "ret_18_24"
-  FROM duesseldorf.station_movements
+  FROM bikesharing.station_movements
   )
   SELECT
   key,
@@ -36,7 +37,7 @@ FROM
   FROM station_periods
   GROUP BY key
 ) t1
-FULL OUTER JOIN 
+FULL OUTER JOIN
 (
   SELECT
   key AS key2,
@@ -45,7 +46,7 @@ FULL OUTER JOIN
   sum(CASE WHEN observation_type='observation' THEN duration ELSE NULL END) AS duration_observations,
   sum(CASE WHEN observation_type='empty_station' THEN duration ELSE NULL END) AS duration_empty_station,
   sum(CASE WHEN observation_type='uncertain' THEN duration ELSE NULL END) AS duration_uncertain
-  FROM duesseldorf.station_observation_periods
+  FROM bikesharing.station_observation_periods
   GROUP BY key
 ) t2
 ON (t1.key = t2.key2)
@@ -67,11 +68,11 @@ UPDATE temp SET avg_returns_per_day =
   returns/observed_days;
 
 
---combine station_statistics further with infos from duesseldorf.stations
+--combine station_statistics further with infos from bikesharing.stations
 
-DROP TABLE IF EXISTS duesseldorf.station_statistics;
+DROP TABLE IF EXISTS bikesharing.station_statistics;
 
-CREATE TABLE duesseldorf.station_statistics AS 
+CREATE TABLE bikesharing.station_statistics AS
 SELECT
 stats.*,
 infos.provider,
@@ -82,7 +83,7 @@ infos.longitude,
 infos.geom
 FROM
 temp AS stats
-LEFT JOIN 
-duesseldorf.stations AS infos
+LEFT JOIN
+bikesharing.stations AS infos
 ON stats.key = infos.key
 ;

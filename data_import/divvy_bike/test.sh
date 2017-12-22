@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/divvy_bike/data/"
+folder="/home/${user}Bikesharing/data_import/divvy_bike/data/"
 url="https://s3.amazonaws.com/divvy-data/tripdata/"
 
 readarray -t filenames < ${folder}filenames.csv

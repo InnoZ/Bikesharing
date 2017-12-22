@@ -1,7 +1,8 @@
 #!/bin/bash
 
+user="user"
 db="-p 5432 -d shared_mobility"
-folder="/home/bbock/Repositories/Bikesharing/data_import/oslo_city_bike/data/"
+folder="/home/${user}Bikesharing/data_import/oslo_city_bike/data/"
 url="https://developer.oslobysykkel.no/data/"
 
 # #get trip data from open data portal

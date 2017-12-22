@@ -9,7 +9,8 @@ SELECT
 	st_setsrid(ST_Point(longitude_start, latitude_start), 4326) AS geom_start,
 	st_setsrid(ST_Point(longitude_end, latitude_end), 4326) AS geom_end
 FROM bikesharing.vehicle_movements
-WHERE city='berlin' AND started_at BETWEEN '2016-09-01 00:00' AND '2016-10-01 00:00';
+WHERE (started_at BETWEEN '2017-05-01 00:00' AND '2017-06-01 00:00')
+OR (city='berlin' AND started_at BETWEEN '2016-09-01 00:00' AND '2016-10-01 00:00');
 
 -- label last movement of a specific vehicle
 ALTER TABLE bikesharing.temp1 ADD COLUMN last_movement boolean;

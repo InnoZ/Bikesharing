@@ -6,7 +6,9 @@
 
 #__________________________________________________________________________________________
 #SETTINGS START
-db="-p 5432 -d FCS"
+user="user"
+db="-p 5432 -d shared_mobility"
+folder="/home/${user}Bikesharing/data_import/innoz/data/"
 
 buffer_radius_steps=100 # set radius steps in m to create donut shaped containers around POIs
 min_buffer_radius=$buffer_radius_steps
@@ -15,7 +17,7 @@ max_buffer_radius=800 # set maximum radius in m around POIs to be analysed
 SRID=32632 # set SRID to use
 city=berlin # select city to conduct analysis
 
-poi_table=bahnhofberlin_2008
+poi_table=pt_stations_berlin
 #SETTINGS END______________________________________________________________________________
 
 
@@ -24,8 +26,8 @@ poi_table=bahnhofberlin_2008
 echo "*** clear database from old output table"
 psql $db -c "DROP TABLE IF EXISTS ${poi_table};" # clear database from old output table
 echo "*** IMPORT POI TABLE"
-shp2pgsql -s '${SRID}' ~/FCS_DATA/OSM/${poi_table}_EPSG${SRID}.shp ${poi_table} public > ~/FCS_DATA/OSM/${poi_table}.sql
-psql $db -f ~/FCS_DATA/OSM/${poi_table}.sql
+shp2pgsql -s '${SRID}' ${folder}${poi_table}_EPSG${SRID}.shp ${poi_table} public > ${folder}${poi_table}.sql
+psql $db -f ${folder}${poi_table}.sql
 
 # SET SRID FOR TABLES
 echo "*** SET SRID FOR TABLES"
@@ -97,7 +99,7 @@ psql $db -c "CREATE TABLE poi_buffers_for_${poi_table}_with_${buffer_radius_step
 
 for ((buffer_radius=${min_buffer_radius}; buffer_radius<=${max_buffer_radius}; buffer_radius+=$buffer_radius_steps))
 	do
-	psql $db -c "DROP TABLE IF EXISTS temp1_$buffer_radius;" 
+	psql $db -c "DROP TABLE IF EXISTS temp1_$buffer_radius;"
 	psql $db -c "DROP TABLE IF EXISTS temp2_$buffer_radius;" # clear database from temporary files
 done
 psql $db -c "DROP TABLE IF EXISTS temp;" # clear database from temporary files
@@ -110,22 +112,13 @@ echo "*** rearrange tables to make import into QGIS easier ***"
 psql $db <<EFF
 DROP TABLE IF EXISTS poi_buffers_for_${poi_table}_with_${buffer_radius_steps}m_steps_rearranged;
 CREATE TABLE poi_buffers_for_${poi_table}_with_${buffer_radius_steps}m_steps_rearranged
-( 
+(
   gid integer,
-  ds100 character varying(12),
-  nummer integer,
-  kategorie double precision,
-  unterneh character varying(11),
-  land character varying(16),
-  name character varying(40),
-  dsk character varying(5),
-  gkz integer,
-  kreis character varying(50),
-  innoznr integer,
   geom geometry(Point),
   geom_4326 geometry(Point,4326),
   buffer_radius numeric,
-  geom_radius geometry(Polygon,4326),       starts numeric,
+  geom_radius geometry(Polygon,4326),
+	starts numeric,
   starts_density numeric
   );
 EFF
@@ -133,64 +126,45 @@ EFF
 for ((buffer_radius=${min_buffer_radius}; buffer_radius<=${max_buffer_radius}; buffer_radius+=$buffer_radius_steps))
 	do
 psql $db <<EFF
-INSERT INTO poi_buffers_for_${poi_table}_with_${buffer_radius_steps}m_steps_rearranged (gid ,
-  ds100 ,
-  nummer ,
-  kategorie ,
-  unterneh ,
-  land ,
-  name ,
-  dsk ,
-  gkz ,
-  kreis ,
-  innoznr ,
-  geom ,
-  geom_4326, 
-  buffer_radius,
-  geom_radius,
-  starts ,
-  starts_density)
-SELECT   gid ,
-  ds100 ,
-  nummer ,
-  kategorie ,
-  unterneh ,
-  land ,
-  name ,
-  dsk ,
-  gkz ,
-  kreis ,
-  innoznr ,
-  geom ,
-  geom_4326, 
+INSERT INTO poi_buffers_for_${poi_table}_with_${buffer_radius_steps}m_steps_rearranged
+	(
+		gid,
+	  geom,
+	  geom_4326,
+	  buffer_radius,
+	  geom_radius,
+	  starts,
+	  starts_density
+	)
+SELECT
+	gid,
+  geom,
+  geom_4326,
   ${buffer_radius}::numeric as buffer_radius,
-  radius_${buffer_radius} ,
-  starts_${buffer_radius} ,
-  starts_density_${buffer_radius} 
-  FROM  poi_buffers_for_${poi_table}_with_${buffer_radius_steps}m_steps;
+  radius_${buffer_radius},
+  starts_${buffer_radius},
+  starts_density_${buffer_radius}
+  FROM  poi_buffers_for_${poi_table}_with_${buffer_radius_steps}m_steps
+;
 EFF
 done
 #__________________________________________________________________________________________
 
 <<COMMENT1
 DROP TABLE IF EXISTS poi_buffers_for_bahnhofberlin_2008_with_100m_steps_2;
-CREATE TABLE poi_buffers_for_bahnhofberlin_2008_with_100m_steps_2 
-AS SELECT 
-name, 
-geom_4326, 
+CREATE TABLE poi_buffers_for_bahnhofberlin_2008_with_100m_steps_2
+AS SELECT
+name,
+geom_4326,
 (starts_100 + starts_200 +  starts_300+  starts_400+  starts_500+  starts_600+  starts_700+  starts_800) as abs_sum,
-starts_density_100*100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_100, 
-starts_density_200* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800)as starts_density_200,  
-starts_density_300* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_300,  
-starts_density_400* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_400,  
-starts_density_500* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_500,  
-starts_density_600* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_600, 
-starts_density_700 * 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_700, 
-starts_density_800*100/ (starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_800,   
+starts_density_100*100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_100,
+starts_density_200* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800)as starts_density_200,
+starts_density_300* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_300,
+starts_density_400* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_400,
+starts_density_500* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_500,
+starts_density_600* 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_600,
+starts_density_700 * 100/(starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_700,
+starts_density_800*100/ (starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as starts_density_800,
 (starts_density_100   +starts_density_200 +  starts_density_300 +  starts_density_400 +  starts_density_500 +  starts_density_600 + starts_density_700  + starts_density_800) as rel_sum
 FROM poi_buffers_for_bahnhofberlin_2008_with_100m_steps WHERE (starts_100 + starts_200 +  starts_300+  starts_400+  starts_500+  starts_600+  starts_700+  starts_800) > 0;;
 COMMENT1
-
-echo "*** ********** ***"
-echo "*** GESCHAFFT! ***"
-echo "*** ********** ***"

@@ -1,4 +1,4 @@
--- this table will update station movements, so that keys from 
+-- this table will update station movements, so that keys from
 -- 2015 ('nextbike germany') are translated to keys from 2016 ('nextbike-dusseldorf')
 
 --DELETE TABLE IF EXISTS key_table_nextbike;
@@ -11,7 +11,7 @@ round(longitude, 4) AS longitude,
 CASE WHEN provider='nextbike-dusseldorf' THEN key ELSE NULL END AS key_2016,
 CASE WHEN provider='nextbike germany' THEN key ELSE NULL END AS key_2015,
 geom
-FROM duesseldorf.stations
+FROM bikesharing.stations
 WHERE provider IN ('nextbike-dusseldorf', 'nextbike germany')
 )
 SELECT
@@ -26,12 +26,12 @@ GROUP BY latitude, longitude;
 
 DELETE FROM key_table_nextbike WHERE count=1 OR key_2016 IS NULL OR  key_2015 IS NULL;
 
-UPDATE duesseldorf.station_movements AS station_movements
+UPDATE bikesharing.station_movements AS station_movements
 SET key = key_table_nextbike.key_2016
 FROM key_table_nextbike
 WHERE key_table_nextbike.key_2015 = station_movements.key;
 
-UPDATE duesseldorf.station_occupancies AS station_occupancies
+UPDATE bikesharing.station_occupancies AS station_occupancies
 SET key = key_table_nextbike.key_2016
 FROM key_table_nextbike
 WHERE key_table_nextbike.key_2015 = station_occupancies.key;
